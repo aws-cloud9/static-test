@@ -6,6 +6,12 @@ pipeline {
         sh 'tidy -q -e *.html'
       }
     }
+    stage("Test") {
+        withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-static']]) {
+          sh 'env'
+          sh 'aws s3 ls'
+        }
+    }
     stage('Upload to AWS.') {
       steps {
         withAWS(region:'us-east-1',credentials:'aws-static') {
